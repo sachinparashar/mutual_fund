@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block main_content %}
+      <section class="main-section">
+        <div class="title">{{ context_data['title'] }}</div>
+        <div class="flex investment-summary-detail-wrapper">
+          <div class="flex investment-summary-detail">
+            <div class="investment-summary-detail-card">
+              <span class="sub-title">Total Value</span>
+              <div class="bold">{{ data['portfolio_value'] | numberFormat }}</div>
+            </div>
+            <div class="investment-summary-detail-card">
+              <span class="sub-title">Return %</span>
+              <div class="bold">{{ data['final_weighted_percentage'] }}%</div>
+            </div>
+            <div class="investment-summary-detail-card">
+              <span class="sub-title">Ongoing Goals</span>
+              <div class="bold">{{ data['total_goals'] }}</div>
+            </div>
+            <div class="investment-summary-detail-card">
+              <span class="sub-title">Total Returns</span>
+              <div class="bold">{{ data['total_return'] | numberFormat }}</div>
+            </div>
+          </div>
+          <div class="investment-summary-detail-graph" id="summary_graph">
+<!--            <img src="static/summary-dashboard-graph-1.png" alt="graph" />-->
+          </div>
+        </div>
+
+        <div class="mutual-fund-wrapper mb">
+          <div>
+            <div class="title">Mutual fund I spend on</div>
+            <div class="flex pie-chart-wrapper highcharts-figure" id="pie_donut">
+<!--              <img-->
+<!--                src="static/sector_wise_allocation_mutual_fund.png"-->
+<!--                alt="pie-chart"-->
+<!--                class="investment-pie-chart"-->
+<!--              />-->
+<!--                  <div id="container"></div>-->
+            </div>
+          </div>
+          <div>
+            <div class="title">Top 5 Mutual Funds</div>
+            <div class="skill-bar">
+              <div
+                class="flex space-between full-width padding-both bottom-border"
+                style="--bottom-border-size: 4px"
+              >
+                <span>Fund Name</span>
+                <span>%</span>
+              </div>
+              <div class="flex space-between full-width bottom-border">
+                <span class="skill-bar-name">PGDM</span>
+                <div class="flex full-width justify-end">
+                  <span
+                    class="skill-bar-line"
+                    style="--skill-bar-size: 40%"
+                  ></span>
+                  <span>40<span class="primary-font-color f-600">%</span></span>
+                </div>
+              </div>
+              <div class="flex space-between full-width bottom-border">
+                <span class="skill-bar-name">Tata</span>
+                <div class="flex full-width justify-end">
+                  <span
+                    class="skill-bar-line"
+                    style="--skill-bar-size: 35%"
+                  ></span>
+                  <span>35<span class="primary-font-color f-600">%</span></span>
+                </div>
+              </div>
+              <div class="flex space-between full-width bottom-border">
+                <span class="skill-bar-name">ICICI</span>
+                <div class="flex full-width justify-end">
+                  <span
+                    class="skill-bar-line"
+                    style="--skill-bar-size: 25%"
+                  ></span>
+                  <span>25<span class="primary-font-color f-600">%</span></span>
+                </div>
+              </div>
+              <div class="flex space-between full-width bottom-border">
+                <span class="skill-bar-name">SBI small cap</span>
+                <div class="flex full-width justify-end">
+                  <span
+                    class="skill-bar-line"
+                    style="--skill-bar-size: 12%"
+                  ></span>
+                  <span>12<span class="primary-font-color f-600">%</span></span>
+                </div>
+              </div>
+              <div class="flex space-between full-width bottom-border">
+                <span class="skill-bar-name">Others</span>
+                <div class="flex full-width justify-end">
+                  <span
+                    class="skill-bar-line"
+                    style="--skill-bar-size: 13%"
+                  ></span>
+                  <span>13<span class="primary-font-color f-600">%</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="investment-goal-wrapper">
+          <div class="title">Goals</div>
+          <div class="sub-title">
+<!--            You have {{ total_goals }} active ongoing goals, while | goals inactive-->
+            You have {{ data['total_goals'] }} active ongoing goals
+          </div>
+          <div class="investment-goal-cards-container">
+            {% if data['total_goals'] %}
+            {% for d in data['goals_list'] %}
+            <div class="investment-goal-card">
+              <div
+                class="flex space-between full-width padding-both bottom-border"
+                style="--bottom-border-size: 2px"
+              >
+                <span>{{ d['goal_name'] }}</span>
+                <span>On track</span>
+              </div>
+              <div class="flex bottom-border">
+                <div class="flex-col-center investment-goal-card-detail">
+                  <span>{{ d['portfolio_value'] | numberFormat }}</span>
+                  <span class="sub-title">Current Value</span>
+                </div>
+                <div class="flex-col-center investment-goal-card-detail">
+                  <span>{{ d['target_amount'] | numberFormat }}</span>
+                  <span class="sub-title">Target Amount</span>
+                </div>
+                <div class="flex-col-center investment-goal-card-detail">
+                  <span>{{ d['total_return_percent'] }}</span>
+                  <span class="sub-title">Returns</span>
+                </div>
+              </div>
+              <div class="flex-center padding-vertical button-container">
+                <a href="{{ url_for('goals', goal_id= d['goal_id']) }}"><button class="primary-button">View detail</button>
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </section>
+<!--<script src="https://code.highcharts.com/highcharts.js"></script>-->
+<!--<script src="https://code.highcharts.com/modules/exporting.js"></script>-->
+<!--<script src="https://code.highcharts.com/modules/accessibility.js"></script>-->
+	<script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
+<script>
+var data = [{
+  values: {{ data['distribution_dict'] | safe }},
+  labels: ['Banking', 'Tech', 'Energy', 'Pharma' ],
+  domain: {column: 0},
+  name: '',
+  hoverinfo: 'label+percent',
+  textinfo: 'label+percent',
+  hole: .4,
+  type: 'pie'
+}];
+
+var layout = {
+<!--  title: 'Global Emissions 1990-2011',-->
+<!--  annotations: [-->
+<!--    {-->
+<!--      font: {-->
+<!--        size: 20-->
+<!--      },-->
+<!--      showarrow: false,-->
+<!--      text: 'GHG',-->
+<!--      x: 0.17,-->
+<!--      y: 0.5-->
+<!--    }-->
+<!--  ],-->
+  height: 500,
+  width: 600,
+  showlegend: false,
+  grid: {rows: 1, columns: 1}
+};
+
+Plotly.newPlot('pie_donut', data, layout);
+
+<!--var xField = 'Date';-->
+<!--var yField = 'Mean_TemperatureC';-->
+
+var trace1 = {
+  x: {{ graph_data['month'] | safe }},
+  y: {{ graph_data['portfolio_actual_value'] | safe }},
+  mode: 'lines',
+  name: 'Portfolio Value',
+  line: {
+    dash: 'solid',
+    width: 4
+  }
+};
+
+var trace2 = {
+  x: {{ graph_data['month'] | safe }},
+  y: {{ graph_data['portfolio_nifty_value'] | safe }},
+  mode: 'lines',
+  name: 'Nifty Value',
+  line: {
+    dash: 'dashdot',
+    width: 4
+  }
+};
+var selectorOptions = {
+    buttons: [{
+        step: 'month',
+        stepmode: 'backward',
+        count: 1,
+        label: '1m'
+    }, {
+        step: 'month',
+        stepmode: 'backward',
+        count: 6,
+        label: '6m'
+    }, {
+        step: 'year',
+        stepmode: 'todate',
+        count: 1,
+        label: 'YTD'
+    }, {
+        step: 'year',
+        stepmode: 'backward',
+        count: 1,
+        label: '1y'
+    }, {
+        step: 'all',
+    }],
+};
+
+    var data = [trace1, trace2];
+<!--    var data = prepData();-->
+    var layout = {
+        title: 'Portfolio VS Nifty',
+        xaxis: {
+            rangeselector: selectorOptions,
+<!--            rangeslider: {}-->
+        },
+        yaxis: {
+            fixedrange: true
+        }
+    };
+
+    Plotly.newPlot('summary_graph', data, layout);
+
+function prepData() {
+    var x = {{ graph_data['month'] | safe }};
+    var y = {{ graph_data['portfolio_nifty_value'] | safe }};
+
+<!--    rawData.forEach(function(datum, i) {-->
+
+<!--        x.push(new Date(datum[xField]));-->
+<!--        y.push(datum[yField]);-->
+<!--    });-->
+
+    return [{
+        mode: 'lines',
+        x: x,
+        y: y
+    }];
+}
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block main_content %}
+      <section class="main-section h-screen">
+        <div class="flex space-between mb">
+          <div class="title">{{ context_data['title'] }}</div>
+          <div class="edit-profile-icon">
+            <img src="static/edit-pencil-icons.svg" alt="edit-icons" />
+          </div>
+        </div>
+        <div class="profile-detail">
+          <div class="space-between fields-wrapper">
+            <div class="flex space-between field-group">
+              <div class="flex-column">
+                <label class="primary-font-color f-500">First Name</label>
+                <span>{{ current_user.first_name }}</span>
+              </div>
+              <div class="flex-column">
+                <label class="primary-font-color f-500">Last Name</label>
+                <span>{{ current_user.last_name }}</span>
+              </div>
+            </div>
+            <div class="flex space-between field-group">
+              <div class="flex-column">
+                <label class="primary-font-color f-500">Email</label>
+                <span>{{ details['email'] }}</span>
+              </div>
+              <div class="flex-column">
+                <label class="primary-font-color f-500">Mobile</label>
+                <span>{{ details['contact_no'] }}</span>
+              </div>
+            </div>
+            <div class="flex space-between field-group">
+              <div class="flex-column">
+                <label class="primary-font-color f-500">PAN card number</label>
+                <span>{{ details['pan_card'] }}</span>
+              </div>
+              <div class="flex-column">
+                <label class="primary-font-color f-500"
+                  >Name as per PAN card</label
+                >
+                <span>{{ details['name_on_pan_card'] }}</span>
+              </div>
+            </div>
+            <div class="flex space-between field-group">
+              <div class="flex-column">
+                <label class="primary-font-color f-500"
+                  >Residential Status</label
+                >
+                <span>{{ details['residential_status'] }}</span>
+              </div>
+              <div class="flex-column">
+                <label class="primary-font-color f-500">Date of Birth</label>
+                <span>{{ details['dob'] }}</span>
+              </div>
+            </div>
+            <div class="flex space-between field-group">
+              <div class="flex-column">
+                <label class="primary-font-color f-500"
+                  >Permanent Address</label
+                >
+                <span>{{ details['permanent_address'] }}</span>
+              </div>
+              <div class="flex-column">
+                <label class="primary-font-color f-500">PinCode</label>
+                <span>{{ details['pincode'] }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex-col-start avatar-wrapper">
+            <label class="primary-font-color f-500">Photo</label>
+            <div class="profile-avatar">
+              <img src="static/avatar.svg" alt="avatar" />
+            </div>
+            <div class="flex-column">
+              <label class="primary-font-color f-500">Aadhar Card Number</label>
+              <span>{{ details['aadhar_card'] }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+{% endblock %}

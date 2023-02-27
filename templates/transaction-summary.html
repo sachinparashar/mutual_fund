@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block main_content %}
+      <section class="main-section h-screen">
+        <div class="flex space-between mb">
+          <div class="title">{{ context_data['title'] }}</div>
+        </div>
+        <div class="transactionContainer">
+          <table>
+            <thead>
+              <tr>
+                <th class="primary-font-color">Date</th>
+                <th class="primary-font-color">Amount</th>
+                <th class="primary-font-color">Type</th>
+                <th class="primary-font-color">Buy / Sell</th>
+                <th class="primary-font-color">Goal (if any)</th>
+                <th class="primary-font-color">Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% if summary %}
+
+                <td>{{ summary['date'] }}</td>
+                <td>{{ summary['amount'] }}</td>
+                <td>{{ summary['type'] }}</td>
+                <td>{{ summary['call_type'] }}</td>
+                <td>{{ summary['goal_name'] }}</td>
+                <td>
+                  <div class="units">
+                    {% for data in summary['units'] %}
+                    <span>
+                      {% set count = data['unit_count'] | int %}
+                      {% if count > 1  %}
+                      <strong>{{ data['unit_count'] }} Units - </strong>
+                      {% else %}
+                      <strong>{{ data['unit_count'] }} Unit - </strong>
+                      {% endif %}
+                      {{ data['unit_name'] }}
+                      </span>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+{% endblock %}

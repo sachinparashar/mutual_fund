@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block main_content %}
+
+      <section class="main-section">
+        <div class="title">{{ data['goal_detail']['goal_name'] }} Details</div>
+        <div class="flex space-between flex-wrap goal-card-container">
+          <div class="goal-detail-card">
+            <span class="sub-title">Total Goal Amount</span>
+            <div class="bold">{{ data['goal_detail']['target_amount'] | numberFormat }}</div>
+          </div>
+          <div class="goal-detail-card">
+            <span class="sub-title">Porfolio Value</span>
+            <div class="bold">{{ data['portfolio_value'] | numberFormat }}</div>
+          </div>
+          <div class="goal-detail-card">
+            <span class="sub-title">Returns %</span>
+            <div class="bold">{{ data['total_return_percent'] }}</div>
+          </div>
+          <div class="goal-detail-card">
+            <span class="sub-title">Amount Left</span>
+            <div class="bold">{{ data['amount_left'] | numberFormat }}</div>
+          </div>
+          <div class="goal-detail-card">
+            <span class="sub-title">Total Investment</span>
+            <div class="bold">{{ data['invested_amount'] | numberFormat }}</div>
+          </div>
+          <div class="goal-detail-card">
+            <span class="sub-title">Started From</span>
+            <div class="bold">{{ data['start_date'] }}</div>
+          </div>
+          <div class="goal-detail-card">
+            <span class="sub-title">Status</span>
+            <div class="bold">{{ data['goal_detail']['status'] }}</div>
+          </div>
+          <div class="goal-detail-card">
+            <span class="sub-title">Duration</span>
+            {% set duration = data['goal_detail']['duration']|int *12 %}
+            <div class="bold">{{ duration }} Months</div>
+          </div>
+        </div>
+        <div class="goal-graph highcharts-figure" id="graph_performance">
+<!--          <figure class="highcharts-figure">-->
+            <div id="container"></div>
+<!--          </figure>-->
+<!--          <h1>This will have Goal Tracking graph</h1>-->
+        </div>
+        <div class="performance-container">
+          <div class="performance-content">
+            <div class="table-wrapper">
+              <div class="title">{{ data['goal_detail']['goal_name'] }} Goal Distribution</div>
+
+              <div class="transactionContainer goals-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th class="primary-font-color">Mutual Fund</th>
+                      <th class="primary-font-color">Type</th>
+                      <th class="primary-font-color">Distribution</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for key, values in data['fund_distribution'].items() %}
+                    <tr>
+                      <td>{{ key }}</td>
+                      <td>{{ values[0] }}</td>
+                      <td>
+                        <div class="flex full-width justify-end">
+                          <span
+                            class="skill-bar-line"
+                            style="--skill-bar-size: 15%"
+                          ></span>
+                          <span>{{ values[1] }}<span class="primary-font-color f-600">%</span></span>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="performance-content">
+            <div class="performance">
+              <div class="goal-head">
+                <div class="title">{{ data['goal_detail']['goal_name'] }} Goal Performance vs Nifty50</div>
+                <div>
+                  <select name="timeframe" class="select_period">
+                    <option value="3m">3M</option>
+                    <option value="6m">6M</option>
+                    <option value="1y">1y</option>
+                    <option value="3y">3y</option>
+                    <option value="5y">5y</option>
+                  </select>
+                </div>
+              </div>
+              <div class="sub-title">
+                If you had invested ₹1,00,000 you returns would have been
+              </div>
+              <div class="comparison-part">
+                <span>{{ data['goal_detail']['goal_name'] }}</span>
+                <div class="flex full-width">
+                  <span
+                    class="skill-bar-line"
+                    style="--skill-bar-size: 35%"
+                  ></span>
+                </div>
+                <span id="goal_returns">{{ data['goal_amount'] | numberFormat }} </span>
+              </div>
+              <div class="comparison-part">
+                <span>Nifty50</span>
+                <div class="flex full-width">
+                  <span
+                    class="skill-bar-line"
+                    style="--skill-bar-size: 35%"
+                  ></span>
+                </div>
+                <span id="nifty_returns">{{ data['nifty_amount'] | numberFormat }} </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="performance-dynamic-graph">
+          <div class="title">SIP Schedule Graph</div>
+          <img src="static/dynamic-sip-allocation-graph.png" />
+        </div>
+      </section>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+<script>
+
+<!--  var month = "{{ graph_data['month'] | safe }}";-->
+<!--  var portfolio_value = "{{ graph_data['portfolio_value'] | safe }}";-->
+<!--  var predicted_value = "{{ graph_data['predicted_value'] | safe }}";-->
+<!--  var nifty_value = "{{ graph_data['nifty_value'] | safe }}";-->
+<!--  console.log(nifty_value);-->
+<!--  console.log(month);-->
+
+<!--var trace1 = {-->
+<!--  x: {{ graph_data['month'] | safe }},-->
+<!--  y: {{ graph_data['portfolio_actual_value'] | safe }},-->
+<!--  mode: 'lines',-->
+<!--  name: 'Portfolio Value',-->
+<!--  line: {-->
+<!--    dash: 'solid',-->
+<!--    width: 4-->
+<!--  }-->
+<!--};-->
+
+<!--var trace2 = {-->
+<!--  x: {{ graph_data['month'] | safe }},-->
+<!--  y: {{ graph_data['portfolio_predicted_value'] | safe }},-->
+<!--  mode: 'lines',-->
+<!--  name: 'Predicted Value',-->
+<!--  line: {-->
+<!--    dash: 'dashdot',-->
+<!--    width: 4-->
+<!--  }-->
+<!--};-->
+
+<!--var trace3 = {-->
+<!--  x: {{ graph_data['month'] | safe }},-->
+<!--  y: {{ graph_data['portfolio_nifty_value'] | safe }},-->
+<!--  mode: 'lines',-->
+<!--  name: 'Nifty Value',-->
+<!--  line: {-->
+<!--    dash: 'solid',-->
+<!--    width: 4-->
+<!--  }-->
+<!--};-->
+
+<!--&lt;!&ndash;var trace4 = {&ndash;&gt;-->
+<!--&lt;!&ndash;  x: {{ graph_data['month'] | safe }},&ndash;&gt;-->
+<!--&lt;!&ndash;  y: {{ graph_data['nifty_value'] | safe }},&ndash;&gt;-->
+<!--&lt;!&ndash;  mode: 'lines',&ndash;&gt;-->
+<!--&lt;!&ndash;  name: 'dot',&ndash;&gt;-->
+<!--&lt;!&ndash;  line: {&ndash;&gt;-->
+<!--&lt;!&ndash;    dash: 'dot',&ndash;&gt;-->
+<!--&lt;!&ndash;    width: 4&ndash;&gt;-->
+<!--&lt;!&ndash;  }&ndash;&gt;-->
+<!--&lt;!&ndash;};&ndash;&gt;-->
+
+<!--var data = [trace1, trace2, trace3];-->
+<!--Plotly.newPlot('graph_performance', data);-->
+
+Highcharts.chart('container', {
+  chart: {
+    type: 'spline',
+    zoomType: 'x',
+    scrollablePlotArea: {
+      minWidth: 600,
+      scrollPositionX: 1
+    }
+  },
+  title: {
+    text: 'Goal Comparison',
+    align: 'center'
+  },
+  xAxis: {
+    type: 'datetime',
+    labels: {
+      overflow: 'justify'
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Amount'
+    },
+    minorGridLineWidth: 0,
+    gridLineWidth: 0,
+    alternateGridColor: null
+  },
+  tooltip: {
+    valueSuffix: ''
+  },
+  plotOptions: {
+    spline: {
+      lineWidth: 4,
+      states: {
+        hover: {
+          lineWidth: 5
+        }
+      },
+      marker: {
+        enabled: false
+      },
+      pointInterval: 2592000000, // one month
+      pointStart: Date.UTC(2020, 0, 10, 0, 0, 0)
+    }
+  },
+  series: [{
+    name: 'Goal Value',
+    data: {{ graph_data['portfolio_actual_value'] | safe }}
+
+  }, {
+    name: 'Predicted Value',
+    data: {{ graph_data['portfolio_predicted_value'] | safe }}
+  }, {
+    name: 'Nifty Value',
+    data: {{ graph_data['portfolio_nifty_value'] | safe }}
+  }],
+  navigation: {
+    menuItemStyle: {
+      fontSize: '10px'
+    }
+  }
+});
+
+
+</script>
+{% endblock %}

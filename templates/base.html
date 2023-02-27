@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
+    <title>FinTech</title>
+  </head>
+  <body>
+    <main>
+      {% block navigation %}
+            <i class="fa fa-bars" id="hamburger" onclick="toggleMenu()"></i>
+      <section class="sidebar-menu">
+        <div class="flex flex-end">
+          <h1 class="logo">LOGO</h1>
+          <i class="fa fa-close" id="close-menu" onclick="closeMenu()"></i>
+        </div>
+        <div class="menu-items-wrapper">
+          <div class="flex space-between menu-items">
+            <div class="flex">
+              <i class="fa fa-home" aria-hidden="true"></i>
+              <span>Profile</span>
+            </div>
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+          </div>
+          <a class="flex space-between sub-menus" href="{{ url_for('summary_dashboard') }}">
+            <div class="flex">
+              <i class="fa-solid fa-circle"></i>
+              <span>Summary Dashboard</span>
+            </div>
+          </a>
+          <a class="flex space-between sub-menus" href="{{ url_for('profile_details') }}">
+            <div class="flex">
+              <i class="fa-solid fa-circle"></i>
+              <span>Details</span>
+            </div>
+          </a>
+        </div>
+        <div class="menu-items-wrapper">
+          <div class="flex space-between menu-items">
+            <div class="flex">
+              <i class="fa fa-folder" aria-hidden="true"></i>
+              <span>Goals</span>
+            </div>
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+          </div>
+          {% if context_data['goals'] %}
+          {% for key, value in context_data['goals'].items() %}
+          <a class="flex space-between sub-menus" href="{{ url_for('goals', goal_id= key) }}">
+            <div class="flex">
+              <i class="fa-solid fa-circle"></i>
+              <span>{{ value }}</span>
+            </div>
+          </a>
+          {% endfor %}
+          {% endif %}
+        </div>
+
+        <a class="flex space-between menu-items" href="{{ url_for('transaction_summary') }}">
+          <div class="flex">
+            <i class="fa fa-folder" aria-hidden="true"></i>
+            <span>Transaction Summary</span>
+          </div>
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </a>
+        <a class="flex space-between menu-items" href="{{ url_for('bank_details') }}">
+          <div class="flex">
+            <i class="fa fa-building" aria-hidden="true"></i>
+            <span>Banking Info</span>
+          </div>
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </a>
+        <a class="flex space-between menu-items" href="{{ url_for('logout') }}">
+          <div class="flex">
+            <i class="fa fa-building" aria-hidden="true"></i>
+            <span>Logout</span>
+          </div>
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </a>
+      </section>
+      {% endblock %}
+      {% block main_content %}{% endblock %}
+    </main>
+  </body>
+</html>
+
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+<script>
+$(document).ready(function(){
+    $('.highcharts-exporting-group').hide();
+});
+</script>

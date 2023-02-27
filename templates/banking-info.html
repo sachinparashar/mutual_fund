@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block main_content %}
+
+      <section class="main-section h-screen">
+        <div class="flex space-between">
+          <div class="title">{{ context_data['title'] }}</div>
+        </div>
+        <div class="banking-info">
+          <div class="space-between banking-info-fields-wrapper">
+            <div class="flex space-between field-group">
+              <div class="flex-column">
+                <label class="primary-font-color f-500">Account Number</label>
+                <span>XXXXXXXXXXXX{{ details['account_number'] }}</span>
+              </div>
+              <div class="flex-column">
+                <label class="primary-font-color f-500"
+                  >Account Holder Name</label
+                >
+                <span>{{ details['account_holder_name'] }}</span>
+              </div>
+            </div>
+            <div class="flex space-between field-group">
+              <div class="flex-column">
+                <label class="primary-font-color f-500">City</label>
+                <span>{{ details['city'] }}</span>
+              </div>
+              <div class="flex-column">
+                <label class="primary-font-color f-500">Country</label>
+                <span>{{ details['country'] }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+{% endblock %}
+
